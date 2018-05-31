@@ -1,0 +1,68 @@
+{
+  "IcoMoonType": "selection",
+  "icons": [
+    {
+      "icon": {
+        "paths": [
+          "M963.888 963.672l615.015-613.929c80.050-79.909 80.164-209.581 0.256-289.631-38.418-38.486-90.564-60.112-144.943-60.112h-1230.029c-113.108 0-204.8 91.692-204.8 204.8 0 54.379 21.627 106.525 60.112 144.943l615.015 613.929c79.95 79.809 209.425 79.809 289.375 0z"
+        ],
+        "attrs": [
+          {}
+        ],
+        "width": 1638,
+        "isMulticolor": false,
+        "isMulticolor2": false,
+        "grid": 0,
+        "tags": [
+          "Triangle"
+        ]
+      },
+      "attrs": [
+        {}
+      ],
+      "properties": {
+        "order": 2,
+        "id": 0,
+        "name": "Triangle",
+        "prevSize": 32,
+        "code": 59648
+      },
+      "setIdx": 0,
+      "setId": 0,
+      "iconIdx": 0
+    }
+  ],
+  "height": 1024,
+  "metadata": {
+    "name": "icomoon"
+  },
+  "preferences": {
+    "showGlyphs": true,
+    "showQuickUse": true,
+    "showQuickUse2": true,
+    "showSVGs": true,
+    "fontPref": {
+      "prefix": "icon-",
+      "metadata": {
+        "fontFamily": "icomoon"
+      },
+      "metrics": {
+        "emSize": 1024,
+        "baseline": 6.25,
+        "whitespace": 50
+      },
+      "embed": false
+    },
+    "imagePref": {
+      "prefix": "icon-",
+      "png": true,
+      "useClassSelector": true,
+      "color": 0,
+      "bgColor": 16777215,
+      "classSelector": ".icon"
+    },
+    "historySize": 50,
+    "showCodes": true,
+    "gridSize": 16
+  }
+}
