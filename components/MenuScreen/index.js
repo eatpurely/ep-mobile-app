@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-import { Text, View, Image, FlatList, ScrollView } from 'react-native';
+import { Text, View, Image, FlatList, ScrollView, Picker } from 'react-native';
 import styles from './styles';
 import {
   Container,
@@ -18,54 +18,66 @@ import {
   InputFieldCreditCard,
 } from '@eatpurely/mobile-ui-kit';
 
-import fakeEntrees from '../../helpers/fakeEntrees';
+import * as fakeData from '../../helpers/fakeData';
 
 class MenuScreen extends Component {
 
+  state = {
+    selectedDay: 0,
+    openDays: fakeData.days()
+  }
+
   renderMeal = ({item}) => (
-    <MealCard meal = {item}>
-      <AddToCartGroup options = {item.cartOptions}/>
+    <MealCard
+      meal = {item}
+      onOverlayClick = {() => console.log(item.id)}
+    >
+      <AddToCartGroup
+        options = {item.cartOptions}
+        onOptionClick = {() => console.log('clicked an option')}
+      />
     </MealCard>
   )
 
-  getDate = () => moment().calendar(null, {
-    sameDay: '[Today], MMMM D',
-    nextDay: '[Tomorrow], MMMM D',
-    nextWeek: '[Next] dddd, MMMM D',
-    sameElse: 'MMMM D'
-  })
+  headerChange = v => {
+    let i = this.state.openDays.indexOf(v)
+    this.setState({selectedDay: i})
+  }
 
   render() {
+    let {selectedDay, openDays, isVisible} = this.state;
+
     return (
-      <View style = {{flex:1, backgroundColor: 'white'}}>
+      <ScrollView
+        style = {{flex:1, backgroundColor: 'white'}}
+        showsVerticalScrollIndicator = {false}
+      >
         <Container>
           <NavBar>
             <NavItem
               onPress = {() => console.log('sign in')}
-              action = 'Sign up'
+              action = 'Sign in'
             />
           </NavBar>
         </Container>
-        <ScrollView>
-          <Container>
-            <Heading
-              onPress = {()=> console.log("hello")}
-              title = {this.getDate()}
-              hasOptions
-              highlight
-              style = {{marginBottom: 30}}
-            />
-          </Container>
-          <Container>
-            <SubHeading style = {{marginBottom: 20}} title = "Entrees"/>
-          </Container>
-          <FlatList
-            data = {fakeEntrees(5)}
-            renderItem = {this.renderMeal}
-            keyExtractor = {item => `meal_${item.id}`}
+        <Container>
+          <Heading
+            onValueChange = {this.headerChange}
+            title = {openDays[selectedDay]}
+            options = {openDays}
+            highlight
+            style = {{marginBottom: 20}}
           />
-        </ScrollView>
-      </View>
+        </Container>
+        <Container>
+          <SubHeading style = {{marginBottom: 20}} title = "Entrees"/>
+        </Container>
+        <FlatList
+          data = {fakeData.meals(5)}
+          renderItem = {this.renderMeal}
+          keyExtractor = {item => `meal_${item.id}`}
+        />
+      </ScrollView>
     );
   }
 }
