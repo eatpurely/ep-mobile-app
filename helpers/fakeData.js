@@ -19,3 +19,5 @@ export const days = () => Array(6).fill().map((d,i) => moment().add(i,'days')
     nextWeek: 'dddd, MMMM D',
     sameElse: 'dddd, MMMM D'
 }));
+
+export const addresses = ['2413 Lee St.', '1709 W. Washington']
