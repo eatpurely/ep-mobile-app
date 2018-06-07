@@ -24,7 +24,8 @@ class MenuScreen extends Component {
 
   state = {
     selectedDay: 0,
-    openDays: fakeData.days()
+    openDays: fakeData.days(),
+    cart: []
   }
 
   renderMeal = ({item}) => (
@@ -34,7 +35,7 @@ class MenuScreen extends Component {
     >
       <AddToCartGroup
         options = {item.cartOptions}
-        onOptionClick = {() => console.log('clicked an option')}
+        onOptionClick = {option => this.setState({cart: [...this.state.cart, option]})}
       />
     </MealCard>
   )
@@ -44,6 +45,20 @@ class MenuScreen extends Component {
     this.setState({selectedDay: i})
   }
 
+  getNavItem(){
+    let [action, onPress, icon, count] = Array(3).fill()
+    let {cart} = this.state;
+
+    if(cart.length > 0){
+      icon = 'local-offer'
+      count = cart.length
+      onPress = () => console.log('cart press')
+    }else{
+      action = 'Sign in'
+      onPress = () => console.log('sign in')
+    }
+    return {action, onPress, icon, count}
+  }
   render() {
     let {selectedDay, openDays, isVisible} = this.state;
 
@@ -54,10 +69,7 @@ class MenuScreen extends Component {
       >
         <Container>
           <NavBar>
-            <NavItem
-              onPress = {() => console.log('sign in')}
-              action = 'Sign in'
-            />
+            <NavItem {...this.getNavItem()}/>
           </NavBar>
         </Container>
         <Container>
