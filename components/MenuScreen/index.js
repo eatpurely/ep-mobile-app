@@ -1,27 +1,21 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import moment from 'moment';
-import { Text, View, Image, FlatList, ScrollView, Picker } from 'react-native';
+import { Text, View, FlatList, ScrollView} from 'react-native';
+import ClientNav from '../common/ClientNav';
 import styles from './styles';
 import {
   Container,
-  NavBar,
-  NavItem,
   MealCard,
   AddToCartGroup,
   SubHeading,
   Heading,
-  Button,
   FullscreenModal,
-  AddressForm,
-  Map,
-  MapMarker,
-  InputFieldCreditCard,
 } from '@eatpurely/mobile-ui-kit';
 
 import * as constants from '../../helpers/constants';
 import * as fakeData from '../../helpers/fakeData';
 
-class MenuScreen extends Component {
+class MenuScreen extends PureComponent {
 
   state = {
     selectedDay: 0,
@@ -38,7 +32,8 @@ class MenuScreen extends Component {
   renderMeal = ({item}) => (
     <MealCard
       meal = {item}
-      onOverlayClick = {() => console.log(item.id)}
+      onOverlayClick = {() => this.props.navigation
+        .navigate('menuItem', {meal: item})}
     >
       <AddToCartGroup
         options = {item.cartOptions}
@@ -54,23 +49,6 @@ class MenuScreen extends Component {
 
   addressChange = v => {
     this.setState({setAddress: v})
-  }
-  getNavItem(){
-    let [action, onPress, icon, count] = Array(3).fill()
-    let {cart, loggedIn} = this.state;
-
-    if(cart.length > 0){
-      icon = 'local-offer'
-      count = cart.length
-      onPress = () => console.log('cart press')
-    }else if(!loggedIn){
-      action = 'Sign in'
-      onPress = () => console.log('sign in')
-    }else if(loggedIn){
-      action = 'My Account'
-      onPress = () => console.log('my account')
-    }
-    return {action, onPress, icon, count}
   }
 
   handleScroll = e => {
@@ -102,21 +80,17 @@ class MenuScreen extends Component {
   render() {
     let {
       selectedDay, openDays, isVisible, currentMeal,
-      loggedIn, name, setAddress, addresses, meals
+      loggedIn, name, setAddress, addresses, meals, cart
     } = this.state;
 
     return (
       <ScrollView
-        style = {{flex:1, backgroundColor: 'white'}}
+        style = {{flex:1}}
         showsVerticalScrollIndicator = {false}
         ref = { sV => this.scroll = sV}
         onScrollEndDrag = {this.handleScroll}
       >
-        <Container>
-          <NavBar>
-            <NavItem {...this.getNavItem()}/>
-          </NavBar>
-        </Container>
+        <ClientNav {...{cart, loggedIn}}/>
         <Container>
           <Heading
             onValueChange = {this.selectedDateChange}
