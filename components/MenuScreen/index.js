@@ -18,6 +18,7 @@ import {
   InputFieldCreditCard,
 } from '@eatpurely/mobile-ui-kit';
 
+import * as constants from '../../helpers/constants';
 import * as fakeData from '../../helpers/fakeData';
 
 class MenuScreen extends Component {
@@ -30,7 +31,8 @@ class MenuScreen extends Component {
     name: "Ez",
     currentMeal: moment('2:00 pm','h:m a').diff(moment()) < 0 ? 'dinner':'lunch',
     setAddress:fakeData.addresses[0],
-    addresses:fakeData.addresses
+    addresses:fakeData.addresses,
+    meals: fakeData.meals(5)
   }
 
   renderMeal = ({item}) => (
@@ -71,16 +73,44 @@ class MenuScreen extends Component {
     return {action, onPress, icon, count}
   }
 
+  handleScroll = e => {
+    let {meals} = this.state;
+    let {SCREEN_HEIGHT} = constants
+    let {contentSize:{height}, contentOffset:{y}, velocity:{y: dir}} = e.nativeEvent;
+
+    let headerY = height - SCREEN_HEIGHT * meals.length;
+    let intervals = Array(meals.length).fill()
+      .map((e,i) => SCREEN_HEIGHT*i + headerY).concat(1)
+      .sort((a,b) => a - b)
+
+    let place = null
+
+    if(dir > 0){
+      place = intervals.filter(n => (y - 50) < n)[0] || [...intervals].pop();
+    }else if(dir < 0){
+      place = intervals.filter(n => (y - 50) > n).pop();
+    }else{
+      place = intervals.reduce((prev, curr) => {
+        return Math.abs(curr - y) < Math.abs(prev - y) ? curr : prev
+      })
+    }
+
+    this.scroll.scrollTo({y: place, animated: true})
+
+  }
+
   render() {
     let {
       selectedDay, openDays, isVisible, currentMeal,
-      loggedIn, name, setAddress, addresses
+      loggedIn, name, setAddress, addresses, meals
     } = this.state;
 
     return (
       <ScrollView
         style = {{flex:1, backgroundColor: 'white'}}
         showsVerticalScrollIndicator = {false}
+        ref = { sV => this.scroll = sV}
+        onScrollEndDrag = {this.handleScroll}
       >
         <Container>
           <NavBar>
@@ -93,7 +123,6 @@ class MenuScreen extends Component {
             title = {openDays[selectedDay]}
             options = {openDays}
             highlight
-            style = {{marginBottom: 20}}
           />
         </Container>
         {!loggedIn && addresses.length &&
@@ -113,7 +142,7 @@ class MenuScreen extends Component {
           <SubHeading style = {{marginBottom: 20}} title = "Entrees"/>
         </Container>
         <FlatList
-          data = {fakeData.meals(5)}
+          data = {meals}
           renderItem = {this.renderMeal}
           keyExtractor = {item => `meal_${item.id}`}
         />
